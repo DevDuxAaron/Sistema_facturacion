@@ -34,21 +34,20 @@ let items_selected = {}
 let items_wished = {}
 
 // ENVIAR AL SERVIDOR
-// let items_selected = {
-//     "id" : ["Producto", cantidad],
-//     "1234" : ["Juguete1", 3],
-//     "1235" : ["Juguete2", 4],
-//     "1236" : ["Juguete3", 5],
-//     "1237" : ["Juguete4", 1]
-// }
+let peticion = {
+     "id" : ["10521", "10522","10523"],
+     "cantidad":[10,9,5]
+     //"10522" : ["JSnake Lego set", 4],
+     //"10523" : ["Frog Lego set", 5]
+ }
 
 
-let frag = document.createDocumentFragment()
-let products_list = document.getElementById("products")
-
+//let frag = document.createDocumentFragment()
+//let products_list = document.getElementById("products")
+/*
 let catalog = document.getElementById("catalog")
-let sidemenu = document.getElementById("sidemenu")
-
+let sidemenu = document.getElementById("sidemenu")*/
+/*
 let show_catalog = () => {
     while (products_list.firstChild) {
         products_list.removeChild(products_list.lastChild);
@@ -229,9 +228,13 @@ catalog.addEventListener("click", (e) => {
     }
 })
 
+export{ peticion }
 
 window.onload = () => {
     // update_items_selected()
     show_catalog()
     localStorage.setItem("products", JSON.stringify(products));
 }
+*/
+
+export{ peticion }
