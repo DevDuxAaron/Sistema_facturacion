@@ -4,15 +4,17 @@ var mysql = require('mysql')
 
 var server = net.createServer((socket) =>{
     console.log("Cliente Conectado Satisfactoriamente")
-    //socket.write("\nEl cliente se conecto")
-    //socket.write("\nProductos disponibles:")
-    //socket.write(mostrarProductsRaw(products_raw))
-    obterDatosBD(socket)
+    obtenerDatosBD(socket)
+    
     
     socket.on('data', (data) => {
         console.log("Productos solicitados")
-        console.log(data.toString())
-        
+        let peticion = data.toString()
+        console.log(peticion);
+        console.log("PRODUCTOS SOLICITADOS\n");
+        peticion = JSON.parse(peticion)
+        console.log(peticion);
+        calcularTotal(socket,peticion)
     })
 
 
@@ -30,12 +32,12 @@ server.listen(8080, function(){
 
 
 
-function obterDatosBD(socket) {
+function obtenerDatosBD(socket) {
     var connection = mysql.createConnection({
         host: 'localhost',
-        database: 'productos',
-        user: 'prod',
-        password: 'prod',
+        database: 'lab273',
+        user: 'admin',
+        password: 'admin',
     });
     
     //var datos = []
@@ -47,25 +49,84 @@ function obterDatosBD(socket) {
         console.log('Conectado con el identificador: ' + connection.threadId)
     })
     //Haciendo consultas
-    connection.query('SELECT * FROM productos', (error, results, fields) => {
+    connection.query('SELECT * FROM producto', (error, results, fields) => {
         if (error)
             throw error
         //Iterar la DB
+
+        let answer = [...results]
+
         results.forEach(result =>{
-            //datos.push(results['id'])
-            socket.write("Producto: \r\n" +"ID: "+result['id']+"\r\n"+"Nombre: "+result['nombre']+"\r\n"+"Descripcion: "+result['descripcion']+"\r\n"+"Categoria: "+result['categoria']+"\r\n"+"Precio: "+result['precio']+"\r\n")
-            //socket.write("ID: "+result['id']+"\r\n")
-            //socket.write("Nombre: "+result['nombre']+"\r\n")
-            //socket.write("Descripcion: "+result['descripcion']+"\r\n")
-            //socket.write("Categoria: "+result['categoria']+"\r\n")
-            //socket.write("Precio: "+result['precio']+"\r\n")
-            //console.log(typeof result)
+           
+            console.log("Producto: \r\n" +"ID: "+result['id_producto']+"\r\n"+"Nombre: "+result['nombre']+"\r\n"+"Descripcion: "+result['descripcion']+"\r\n"+"Categoria: "+result['categoria']+"\r\n"+"Precio: "+result['precio']+"\r\n")
+            
+        })
+
+        //console.log(answer);
+        
+    })
+    connection.end()
+
+}
+
+
+function calcularTotal(socket,peticion){
+    var connection = mysql.createConnection({
+        host: 'localhost',
+        database: 'lab273',
+        user: 'admin',
+        password: 'admin',
+    });
+    
+    var total = []
+    var sumaProd = 0
+    connection.connect((err) => {
+        if (err) {
+            console.error('Error de conexión ')
+            return
+        }
+        console.log('Conectado con el identificador: ' + connection.threadId)
+    })
+    //Haciendo consultas
+    
+    for (let i = 0; i < peticion.id.length; i++) {
+        connection.query('SELECT * FROM producto', (error, results) => {
+            if (error)
+                throw error
+    
+    
+            results.forEach(result =>{
+                
+                if (result['id_producto']==peticion.id[i]) {
+                    //sumaProd = peticion.cantidad[i]*result['precio']
+                    socket.write((peticion.cantidad[i]*result['precio']).toString())
+                }
+                
+            })
+    
+            
+        })
+        
+        //total.push(sumaProd)
+        
+    }
+    connection.end()
+    /*connection.query('SELECT * FROM producto', (error, results) => {
+        if (error)
+            throw error
+
+
+        results.forEach(result =>{
+
+            
         })
 
         
     })
-    connection.end()
-    //Finalizar la conexion
+    connection.end()*/
+    return total
 }
+
+
 
 
