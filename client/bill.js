@@ -9,7 +9,7 @@ let items_selected
 // PETICION SERVIDOR
 let respuesta = {
     "products" : {
-        "1234" : ["Juguete1", 289],
+        "1234" : ["Juguete1", 100],
         "1235" : ["Juguete2", 89],
         "1236" : ["Juguete3", 59],
         "1237" : ["Juguete4", 209],
